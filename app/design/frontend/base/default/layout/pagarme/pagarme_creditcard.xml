@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="head">
+            <block type="core/text" name="pagarme.cdn.js">
+                <action method="setText">
+                    <text><![CDATA[<script src="https://assets.pagar.me/pagarme-js/3.0/pagarme.min.js"></script>]]></text>
+                </action>
+        	</block>
+        </reference>
+    </default>
+</layout>

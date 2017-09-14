@@ -35,3 +35,8 @@ default:
         - %paths.base%/tests/acceptance/features/one_step_checkout.feature
       contexts:
         - OneStepCheckoutContext
+    credit_card:
+      paths:
+        - %paths.base%/tests/acceptance/features/credit_card.feature
+      contexts:
+        - CreditCardContext

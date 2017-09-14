@@ -1,0 +1,124 @@
+<?php $_code=$this->getMethodCode() ?>
+
+<ul class="form-list" id="payment_form_<?= $_code ?>" style="display: none">
+  <input type="hidden" value="" name="payment[card_hash]" id="pagarme_card_hash" class="required_entry" />
+    <li>
+        <label for="<?= $_code ?>_creditcard_number" class="required">
+            <em>*</em><?= $this->__('Credit Card Number') ?>
+        </label>
+        <div class="input-box">
+            <input
+                type="text"
+                id="<?= $_code ?>_creditcard_number"
+                title="<?= $this->__('Credit Card Number') ?>"
+                class="input-text required-entry validate-digits"
+                maxlength="19"
+                value=""
+            />
+        </div>
+    </li>
+    <li>
+        <label for="<?= $_code ?>_creditcard_owner" class="required">
+            <em>*</em><?= $this->__('Credit Card Owner') ?>
+        </label>
+        <div class="input-box">
+            <input
+                type="text"
+                id="<?= $_code ?>_creditcard_owner"
+                placeholder="<?= $this->__('Name in credit card') ?>"
+                title="<?= $this->__('Credit Card Owner') ?>"
+                class="input-text required-entry"
+                value=""
+            />
+        </div>
+    </li>
+    <li>
+        <label for="<?= $_code ?>_creditcard_expiration_date" class="required">
+            <em>*</em><?= $this->__('Credit Card Expiration Date') ?>
+        </label>
+        <div class="input-box">
+            <input
+                type="text"
+                id="<?= $_code ?>_creditcard_expiration_date"
+                title="<?= $this->__('Credit Card Expiration Date') ?>"
+                placeholder="MMAA"
+                class="input-text required-entry validate-digits"
+                maxlength="4"
+                value=""
+            />
+        </div>
+    </li>
+    <li>
+        <label for="<?= $_code ?>_creditcard_cvv" class="required">
+            <em>*</em><?= $this->__('Credit Card Verification Number') ?>
+        </label>
+        <div class="input-box">
+            <input
+                type="text"
+                id="<?= $_code ?>_creditcard_cvv"
+                title="<?= $this->__('Credit Card Verification Number') ?>"
+                class="input-text required-entry validate-digits"
+                maxlength="4"
+                value=""
+            />
+        </div>
+    </li></ul>
+<div>
+    <?= $this->getMethod()->getConfigData('message');?>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+  const get = id => document.querySelector(id)
+
+  const encryptionKey = '<?= $this->getEncryptionKey() ?>'
+
+  const generateHash = () => {
+    const card = {
+      card_number: get('#<?= $_code ?>_creditcard_number').value,
+      card_holder_name: get('#<?= $_code ?>_creditcard_owner').value,
+      card_expiration_date: get('#<?= $_code ?>_creditcard_expiration_date').value,
+      card_cvv: get('#<?= $_code ?>_creditcard_cvv').value,
+    }
+
+    return pagarme.client.connect({ encryption_key: encryptionKey })
+      .then(client => client.security.encrypt(card))
+      .then((card_hash) => {
+        get('#pagarme_card_hash').value = card_hash
+        return card_hash
+      })
+  }
+
+  get('#opc-payment .button').addEventListener('click', function() {
+    generateHash()
+  })
+
+  const clearHash = () => {
+    get('#pagarme_card_hash').value = ''
+  }
+
+  let addedEvent = false
+
+  get('#opc-review').addEventListener('click', function(event) {
+alert('teste')
+    let buttons = this.getElementsByClassName('btn-checkout')
+    const button = buttons[0]
+    const buttonOnClick = button.onclick
+    for(let i = 0; i < event.path.length; i++) {
+      if(event.path[i].tagName == 'BUTTON' && !addedEvent) {
+        event.path[i].onclick = null
+        event.path[i].addEventListener('click', function() {
+          generateHash()
+            .then(() => buttonOnClick())
+          //clearHash()
+        })
+        generateHash()
+          .then(() => buttonOnClick())
+
+        addedEvent = true
+        //clearHash()
+      }
+    }
+  }, true)
+
+//]]>
+</script>

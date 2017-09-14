@@ -43,7 +43,7 @@ class PagarMe_Checkout_Block_Form_Checkout extends Mage_Payment_Block_Form
     public function getButtonText()
     {
         return Mage::getStoreConfig(
-            'payment/pagarme_settings/button_text'
+            'payment/pagarme_settings/checkout_button_text'
         );
     }
 
@@ -109,20 +109,20 @@ class PagarMe_Checkout_Block_Form_Checkout extends Mage_Payment_Block_Form
 
     public function hasFixedDiscountOnBoleto()
     {
-        return Mage::getStoreConfig('payment/pagarme_settings/checkout_boleto_discount_mode')
+        return Mage::getStoreConfig('payment/pagarme_settings/boleto_discount_mode')
             == PagarMe_Core_Model_System_Config_Source_BoletoDiscountMode::FIXED_VALUE;
     }
 
     private function hasPercentageDiscountOnBoleto()
     {
-        return Mage::getStoreConfig('payment/pagarme_settings/checkout_boleto_discount_mode')
+        return Mage::getStoreConfig('payment/pagarme_settings/boleto_discount_mode')
             == PagarMe_Core_Model_System_Config_Source_BoletoDiscountMode::PERCENTAGE;
     }
 
     private function getBoletoDiscount()
     {
         return Mage::getStoreConfig(
-            'payment/pagarme_settings/checkout_boleto_discount'
+            'payment/pagarme_settings/boleto_discount'
         );
     }
 
@@ -143,7 +143,7 @@ class PagarMe_Checkout_Block_Form_Checkout extends Mage_Payment_Block_Form
         $helper = Mage::helper('pagarme_core');
 
         $cardBrands = \Mage::getStoreConfig(
-            'payment/pagarme_settings/checkout_allowed_credit_card_brands'
+            'payment/pagarme_settings/creditcard_allowed_credit_card_brands'
         );
 
         $config = [
@@ -179,13 +179,13 @@ class PagarMe_Checkout_Block_Form_Checkout extends Mage_Payment_Block_Form
                 'payment/pagarme_settings/checkout_payment_button_text'
             ),
             'interestRate' => Mage::getStoreConfig(
-                'payment/pagarme_settings/credit_card_interest_rate'
+                'payment/pagarme_settings/creditcard_interest_rate'
             ),
             'maxInstallments' => Mage::getStoreConfig(
-                'payment/pagarme_settings/credit_card_max_installments'
+                'payment/pagarme_settings/creditcard_max_installments'
             ),
             'freeInstallments' => Mage::getStoreConfig(
-                'payment/pagarme_settings/credit_card_free_installments'
+                'payment/pagarme_settings/creditcard_free_installments'
             ),
             'customerData' => Mage::getStoreConfig(
                 'payment/pagarme_settings/checkout_capture_customer_data'

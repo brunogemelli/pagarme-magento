@@ -10,7 +10,7 @@ class CheckoutContext extends RawMinkContext
     use PagarMe\Magento\Test\Helper\PagarMeSettings;
     use PagarMe\Magento\Test\Helper\CustomerDataProvider;
     use PagarMe\Magento\Test\Helper\ProductDataProvider;
-    use PagarMe\Magento\Test\Helper\PagarMeCheckoutSwitch;
+    use PagarMe\Magento\Test\Helper\PagarMeSwitch;
     use PagarMe\Magento\Test\Helper\Configuration\Inovarti;
 
     private $customer;
@@ -26,25 +26,19 @@ class CheckoutContext extends RawMinkContext
      */
     public function setUp()
     {
-        $config = Mage::getModel('core/config')
-            ->saveConfig(
-                'payment/pagarme_settings/payment_methods',
-                'credit_card,boleto'
-            );
-
         $config = Mage::getModel('core/config');
         $config->saveConfig(
-            'payment/pagarme_settings/payment_methods',
+            'payment/pagarme_settings/checkout_payment_methods',
             'credit_card,boleto'
         );
 
         $config->saveConfig(
-            'payment/pagarme_settings/interest_rate',
+            'payment/pagarme_settings/credit_card_interest_rate',
             5
         );
 
         $config->saveConfig(
-            'payment/pagarme_settings/max_installments',
+            'payment/pagarme_settings/credit_card_max_installments',
             12
         );
 
@@ -169,7 +163,7 @@ class CheckoutContext extends RawMinkContext
         $page->find('css', '#p_method_pagarme_checkout')->click();
         $page->pressButton(
             Mage::getStoreConfig(
-                'payment/pagarme_settings/button_text'
+                'payment/pagarme_settings/checkout_button_text'
             )
         );
     }
