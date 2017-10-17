@@ -112,9 +112,10 @@ class PagarMe_CreditCard_Model_Creditcard extends Mage_Payment_Model_Method_Abst
         $customerPagarMe = $helper->buildCustomer($customer);
 
         try {
-            $authorizedTransaction = Mage::getModel('pagarme_core/sdk_adapter')
-                ->getPagarMeSdk()
-                ->transaction()
+            $pagarmeSdk = Mage::getModel('pagarme_core/sdk_adapter')
+                ->getPagarMeSdk();
+
+            $authorizedTransaction = $pagarmeSdk->transaction()
                 ->creditCardTransaction(
                     $helper->parseAmountToInteger($quote->getGrandTotal()),
                     $card,
@@ -123,12 +124,14 @@ class PagarMe_CreditCard_Model_Creditcard extends Mage_Payment_Model_Method_Abst
                     false
                 );
 
+            $pagarmeSdk->transaction()->capture($authorizedTransaction);
         } catch (\Exception $exception) {
             $json = json_decode($exception->getMessage());
             $json = json_decode($json);
 
             $response = array_reduce($json->errors, function($carry, $item) {
-                return is_null($carry) ? $item->message : $carry."\n".$item->message;
+                return is_null($carry)
+                    ? $item->message : $carry."\n".$item->message;
             });
 
             Mage::throwException($response);

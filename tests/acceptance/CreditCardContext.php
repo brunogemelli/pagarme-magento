@@ -154,9 +154,10 @@ class CreditCardContext extends RawMinkContext
         $page->find('css', '#pagarme_creditcard_creditcard_cvv')
             ->setValue('123');
 
-        $page->find('css', '#opc-payment .button')
-            ->click();
-
+        $this->session->getPage()->find(
+            'css',
+            '#payment-buttons-container button'
+        )->click();
     }
 
     /**
@@ -166,11 +167,11 @@ class CreditCardContext extends RawMinkContext
     {
         $this->waitForElement('#checkout-step-review', 8000);
 
-        $page = $this->session
+        $this->session
             ->getPage()
             ->pressButton(
                 Mage::helper('pagarme_creditcard')
-                    ->__('Place Order')
+                ->__('Place Order')
             );
     }
 
@@ -180,7 +181,6 @@ class CreditCardContext extends RawMinkContext
     public function thePurchaseMustBePaidWithSuccess()
     {
         $this->session->wait(10000);
-
         $page = $this->session->getPage();
 
         $successMessage = $page->find('css', 'h1')
